@@ -2,7 +2,11 @@ package com.example.soundboard_jnt;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.Resources;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,10 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void renderButton(String arg){
         ClearButton();
-        Log.d("Arg", "renderButton: " + arg);
         for (String c: hashmap.get(arg)
              ) {
-            Log.d("hashmap", "renderButton: " + c);
             Button x = new Button(this);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             ViewGroup.MarginLayoutParams margins = new ViewGroup.MarginLayoutParams(params);
@@ -100,6 +103,13 @@ public class MainActivity extends AppCompatActivity {
             margins.rightMargin = 10;
             x.setPadding(100,25,100,25);
             x.setLayoutParams(params);
+            String g = arg + "_" + c;
+            int soundId = getResources().getIdentifier(g,"raw",getPackageName());
+
+            x.setOnClickListener(v -> {
+                MediaPlayer mp = MediaPlayer.create(getApplicationContext(), soundId );
+                mp.start();
+            });
 
             x.setText(c);
             buttonsLayout.addView(x);
